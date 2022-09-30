@@ -7,19 +7,6 @@
 #define B64_OVER	0xC0 // 11000000
 #define B64_START	0x30 // 00110000, ascii character 0
 
-bool cnicIsValid(const DString& c){
-	return c.length() == 13 && isInteger(c);
-}
-
-bool phoneIsValid(const DString& c){
-	return c.length() == 12 && isInteger(c);
-}
-
-bool idIsValid(const DString& c){
-	// confirming with customer (sir), id <999 is not valid
-	return c.length() == 4 && isInteger(c) && c[0] != '0';
-}
-
 /// Converts binary data, bin, of size n bytes, to a null terminated
 /// base 64 string. **This is not a standard base64 implementation**
 /// Returns: the base 64 string

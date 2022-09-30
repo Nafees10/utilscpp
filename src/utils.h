@@ -6,15 +6,6 @@
 /// Returns: a base64 string representing the 32 byte SHA256 hash for a string
 DString hashSHA256(const DString& str);
 
-/// Returns: true if a string contains a valid cnic number
-bool cnicIsValid(const DString&);
-
-/// Returns: true if a string contains a valid phone number
-bool phoneIsValid(const DString&);
-
-/// Returns: true if a string contains a valid customer id
-bool idIsValid(const DString&);
-
 /// Encodes a string for being saved in a CSV file
 DString strEncode(const DString&);
 
