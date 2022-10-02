@@ -7,7 +7,7 @@
 #define B64_OVER	0xC0 // 11000000
 #define B64_START	0x30 // 00110000, ascii character 0
 
-/// Converts binary data, bin, of size n bytes, to a null terminated
+/// Converts binary data, bin, of size n bytes, to a DString storing a
 /// base 64 string. **This is not a standard base64 implementation**
 /// Returns: the base 64 string
 DString toBase64(const char* bin, int n){
@@ -37,63 +37,6 @@ DString hashSHA256(const DString& str){
 	sha256_final(&ctx, hash);
 	// now make it base64
 	return toBase64((char*)hash, SHA256_BLOCK_SIZE);
-}
-
-DString strEncode(const DString& str){
-	DString ret;
-	const int len = str.length();
-	for (int i = 0; i < len; i ++){
-		const char ch = str[i];
-		if (ch == ',' || ch == '\n' || ch == '\r' || ch == '\\'){
-			ret.append('\\');
-			if (ch == ',')
-				ret.append('c');
-			else if (ch == '\n')
-				ret.append('n');
-			else if (ch == '\r')
-				ret.append('r');
-			else
-				ret.append(ch);
-		}else{
-			ret.append(ch);
-		}
-	}
-	return ret;
-}
-
-DString strDecode(const DString& str){
-	DString ret;
-	const int len = str.length();
-	for (int i = 0; i < len; i ++){
-		const char ch = str[i], chNext = str[i + 1];
-		if (ch != '\\'){
-			ret.append(ch);
-			continue;
-		}
-		if (chNext == 0)
-			return nullptr; //	user messed with strings.
-											//	⠟⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⠛⢻⣿
-											//	⡆⠊⠈⣿⢿⡟⠛⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣎⠈⠻
-											//	⣷⣠⠁⢀⠰⠀⣰⣿⣿⣿⣿⣿⣿⠟⠋⠛⠛⠿⠿⢿⣿⣿⣿⣧⠀⢹⣿⡑⠐⢰
-											//	⣿⣿⠀⠁⠀⠀⣿⣿⣿⣿⠟⡩⠐⠀⠀⠀⠀⢐⠠⠈⠊⣿⣿⣿⡇⠘⠁⢀⠆⢀
-											//	⣿⣿⣆⠀⠀⢤⣿⣿⡿⠃⠈⠀⣠⣶⣿⣿⣷⣦⡀⠀⠀⠈⢿⣿⣇⡆⠀⠀⣠⣾
-											//	⣿⣿⣿⣧⣦⣿⣿⣿⡏⠀⠀⣰⣿⣿⣿⣿⣿⣿⣿⡆⠀⠀⠐⣿⣿⣷⣦⣷⣿⣿
-											//	⣿⣿⣿⣿⣿⣿⣿⣿⡆⠀⢰⣿⣿⣿⣿⣿⣿⣿⣿⣿⡄⠀⠀⣿⣿⣿⣿⣿⣿⣿
-											//	⣿⣿⣿⣿⣿⣿⣿⣿⡆⠀⣾⣿⣿⠋⠁⠀⠉⠻⣿⣿⣧⠀⠠⣿⣿⣿⣿⣿⣿⣿
-											//	⣿⣿⣿⣿⣿⣿⣿⣿⣿⡀⣿⡿⠁⠀⠀⠀⠀⠀⠘⢿⣿⠀⣺⣿⣿⣿⣿⣿⣿⣿
-											//	⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⣠⣂⠀⠀⠀⠀⠀⠀⠀⢀⣁⢠⣿⣿⣿⣿⣿⣿⣿⣿
-											//	⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣶⣄⣤⣤⣔⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-		if (chNext == 'c')
-			ret.append(',');
-		else if (chNext == 'n')
-			ret.append('\n');
-		else if (chNext == 'r')
-			ret.append('\r');
-		else
-			ret.append(chNext);
-		i ++;
-	}
-	return ret;
 }
 
 int strLen(const char* str){

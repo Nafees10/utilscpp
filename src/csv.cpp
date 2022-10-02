@@ -19,6 +19,10 @@ CSVFile::CSVFile(){
 	_modified = false;
 }
 
+CSVFile::CSVFile(const CSVFile &from) : _grid(from._grid),
+	_colCount(from._colCount), _filename(from._filename),
+	_modified(from._modified) {}
+
 CSVFile::~CSVFile(){}
 
 bool CSVFile::fileRead(const DString& filename){
@@ -113,6 +117,8 @@ bool CSVFile::cell(int row, int col, const DString& newVal){
 	int index = _getCellIndex(row, col);
 	if (index < 0)
 		return false;
+	if (_grid[index] == newVal)
+		return true;
 	_grid[index] = newVal;
 	_modified = true;
 	return true;
@@ -122,6 +128,7 @@ void CSVFile::rowAppend(int cols){
 	_colCount.append(cols);
 	for (int i = 0; i < cols; i ++)
 		_grid.append(DString());
+	_modified = true;
 }
 
 void CSVFile::clear(){
@@ -134,4 +141,61 @@ void CSVFile::clear(){
 	}
 	_grid.length(0);
 	_colCount.length(0);
+}
+
+DString csvStrEncode(const DString& str){
+	DString ret;
+	const int len = str.length();
+	for (int i = 0; i < len; i ++){
+		const char ch = str[i];
+		if (ch == ',' || ch == '\n' || ch == '\r' || ch == '\\'){
+			ret.append('\\');
+			if (ch == ',')
+				ret.append('c');
+			else if (ch == '\n')
+				ret.append('n');
+			else if (ch == '\r')
+				ret.append('r');
+			else
+				ret.append(ch);
+		}else{
+			ret.append(ch);
+		}
+	}
+	return ret;
+}
+
+DString csvStrDecode(const DString& str){
+	DString ret;
+	const int len = str.length();
+	for (int i = 0; i < len; i ++){
+		const char ch = str[i], chNext = str[i + 1];
+		if (ch != '\\'){
+			ret.append(ch);
+			continue;
+		}
+		if (chNext == 0)
+			return nullptr; //	user messed with strings.
+											//	⠟⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⠛⢻⣿
+											//	⡆⠊⠈⣿⢿⡟⠛⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣎⠈⠻
+											//	⣷⣠⠁⢀⠰⠀⣰⣿⣿⣿⣿⣿⣿⠟⠋⠛⠛⠿⠿⢿⣿⣿⣿⣧⠀⢹⣿⡑⠐⢰
+											//	⣿⣿⠀⠁⠀⠀⣿⣿⣿⣿⠟⡩⠐⠀⠀⠀⠀⢐⠠⠈⠊⣿⣿⣿⡇⠘⠁⢀⠆⢀
+											//	⣿⣿⣆⠀⠀⢤⣿⣿⡿⠃⠈⠀⣠⣶⣿⣿⣷⣦⡀⠀⠀⠈⢿⣿⣇⡆⠀⠀⣠⣾
+											//	⣿⣿⣿⣧⣦⣿⣿⣿⡏⠀⠀⣰⣿⣿⣿⣿⣿⣿⣿⡆⠀⠀⠐⣿⣿⣷⣦⣷⣿⣿
+											//	⣿⣿⣿⣿⣿⣿⣿⣿⡆⠀⢰⣿⣿⣿⣿⣿⣿⣿⣿⣿⡄⠀⠀⣿⣿⣿⣿⣿⣿⣿
+											//	⣿⣿⣿⣿⣿⣿⣿⣿⡆⠀⣾⣿⣿⠋⠁⠀⠉⠻⣿⣿⣧⠀⠠⣿⣿⣿⣿⣿⣿⣿
+											//	⣿⣿⣿⣿⣿⣿⣿⣿⣿⡀⣿⡿⠁⠀⠀⠀⠀⠀⠘⢿⣿⠀⣺⣿⣿⣿⣿⣿⣿⣿
+											//	⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⣠⣂⠀⠀⠀⠀⠀⠀⠀⢀⣁⢠⣿⣿⣿⣿⣿⣿⣿⣿
+											//	⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣶⣄⣤⣤⣔⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+		if (chNext == 'c')
+			ret.append(',');
+		else if (chNext == 'n')
+			ret.append('\n');
+		else if (chNext == 'r')
+			ret.append('\r');
+		else
+			ret.append(chNext);
+		i ++;
+	}
+	return ret;
 }

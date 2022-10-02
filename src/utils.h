@@ -6,12 +6,6 @@
 /// Returns: a base64 string representing the 32 byte SHA256 hash for a string
 DString hashSHA256(const DString& str);
 
-/// Encodes a string for being saved in a CSV file
-DString strEncode(const DString&);
-
-/// Decodes a string that was encoded by strEncode
-DString strDecode(const DString&);
-
 /// Returns: length of CString
 int strLen(const char*);
 

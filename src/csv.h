@@ -13,27 +13,34 @@ private:
 	DString _dummy;
 public:
 	CSVFile();
+	CSVFile(const CSVFile&);
 	virtual ~CSVFile();
 	/// Read from filename
-	bool fileRead(const DString&);
+	virtual bool fileRead(const DString&);
 	/// write memory to file
 	/// Returns: true if done, false if error
-	bool fileWrite();
+	virtual bool fileWrite();
 	/// if file been modified since loading
-	bool modified();
+	virtual bool modified();
 	/// number of rows
-	int rowCount();
+	virtual int rowCount();
 	/// number of columns in specific row
-	int colCount(int);
+	virtual int colCount(int);
 	/// get cell at row, col
-	const DString& cell(int, int);
+	virtual const DString& cell(int, int);
 	/// set cell at row, col
 	/// Returns: true if done, false if out of bounds
-	bool cell(int, int, const DString&);
+	virtual bool cell(int, int, const DString&);
 	/// Appends a row of n columns
-	void rowAppend(int);
+	virtual void rowAppend(int);
 	/// clears the CSV data in-memory
-	void clear();
+	virtual void clear();
 };
+
+/// Encodes a string for being saved in a CSV file
+DString csvStrEncode(const DString&);
+
+/// Decodes a string that was encoded by csvStrEncode
+DString csvStrDecode(const DString&);
 
 #endif
