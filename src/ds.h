@@ -381,7 +381,7 @@ public:
 	}
 
 	/// Push to queue
-	void push(const T&){
+	void push(const T &data){
 		Item *item = new Item(data, nullptr);
 		item->data = data;
 		if (_firstItem)
