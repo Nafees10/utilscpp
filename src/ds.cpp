@@ -24,7 +24,7 @@ DString::~DString(){
 	_free();
 }
 
-char *DString::cstr() const{
+DString::operator char*() const{
 	return array(0);
 }
 

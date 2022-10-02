@@ -31,7 +31,6 @@ int daysInMonth(int month ,int year){
 	}
 }
 
-
 Date::Date(){
 	_year = _month = _day = -1;
 }
