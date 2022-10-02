@@ -44,7 +44,7 @@ bool CSVFile::fileRead(const DString& filename){
 		if (ch == '\r' || ch == '\n' || ch == ',' || file.eof() ||
 		ch == 0){
 			if (word.count() || prevWasComma){
-				DString thisWord = strDecode(word);
+				DString thisWord = csvStrDecode(word);
 				word.length(0);
 				_grid.append(thisWord);
 				_colCount[_colCount.count() - 1] ++;
@@ -80,7 +80,7 @@ bool CSVFile::fileWrite(){
 			const int index = _getCellIndex(r, c);
 			if (index < 0)
 				continue;
-			DString encodedStr = strEncode(_grid[index]);
+			DString encodedStr = csvStrEncode(_grid[index]);
 			file << encodedStr;
 			if (c + 1 < _colCount[r])
 				file << ',';
