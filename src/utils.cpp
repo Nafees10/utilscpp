@@ -28,13 +28,14 @@ DString toBase64(const char* bin, int n){
 }
 
 DString hashSHA256(const DString& str){
-	char* temp = str.cstr();
+	char* temp = str;
 
 	SHA256_CTX ctx;
 	unsigned char hash[SHA256_BLOCK_SIZE]; // 32 bytes
 	sha256_init(&ctx);
 	sha256_update(&ctx, (const BYTE*)temp, strLen(temp));
 	sha256_final(&ctx, hash);
+	delete []temp;
 	// now make it base64
 	return toBase64((char*)hash, SHA256_BLOCK_SIZE);
 }
