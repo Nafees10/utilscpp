@@ -3,6 +3,11 @@
 
 #include "ds.h"
 
+/// Converts binary data, bin, of size n bytes, to a DString storing a
+/// base 64 string. **This is not a standard base64 implementation**
+/// Returns: the base 64 string
+DString toPsuedoBase64(const char* bin, int n);
+
 /// Returns: a base64 string representing the 32 byte SHA256 hash for a string
 DString hashSHA256(const DString& str);
 

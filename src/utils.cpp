@@ -7,10 +7,7 @@
 #define B64_OVER	0xC0 // 11000000
 #define B64_START	0x30 // 00110000, ascii character 0
 
-/// Converts binary data, bin, of size n bytes, to a DString storing a
-/// base 64 string. **This is not a standard base64 implementation**
-/// Returns: the base 64 string
-DString toBase64(const char* bin, int n){
+DString toPsuedoBase64(const char* bin, int n){
 	DString ret;
 	char overflow = 0;
 	char overflowCount = 0;
@@ -37,7 +34,7 @@ DString hashSHA256(const DString& str){
 	sha256_final(&ctx, hash);
 	delete []temp;
 	// now make it base64
-	return toBase64((char*)hash, SHA256_BLOCK_SIZE);
+	return toPsuedoBase64((char*)hash, SHA256_BLOCK_SIZE);
 }
 
 int strLen(const char* str){
